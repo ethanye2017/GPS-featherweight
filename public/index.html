@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Featherweight GPS Backup Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+    .card {
+      background: #222;
+      border-radius: 15px;
+      padding: 20px;
+      margin: 15px auto;
+      max-width: 700px;
+    }
+    pre {
+      white-space: pre-wrap;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <h1>🚀 Featherweight GPS Backup</h1>
+
+  <div class="card">
+    <h2>Status</h2>
+    <p id="status">Connecting...</p>
+  </div>
+
+  <div class="card">
+    <h2>Last Packet</h2>
+    <p id="time">No data yet</p>
+    <pre id="raw">Waiting for Featherweight data...</pre>
+  </div>
+
+  <script>
+    const socket = new WebSocket("ws://localhost:3000");
+
+    socket.onopen = () => {
+      document.getElementById("status").innerText = "Connected to local server";
+    };
+
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      document.getElementById("time").innerText = data.time;
+      document.getElementById("raw").innerText = data.raw;
+    };
+
+    socket.onclose = () => {
+      document.getElementById("status").innerText = "Disconnected";
+    };
+  </script>
+</body>
+</html>
